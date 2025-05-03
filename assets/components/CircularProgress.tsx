@@ -11,7 +11,12 @@ const styles = StyleSheet.create({
   }
 });
 
-const CircularProgress = ({ percentage, size = 80 }) => {
+type CircularProgressProps = {
+  percentage: number;
+  size?: number;
+};
+
+const CircularProgress = ({ percentage, size = 80 }: CircularProgressProps) => {
     const strokeWidth = 8;
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;

@@ -16,34 +16,52 @@ interface TabBarIconProps {
 
 // Composant personnalisé pour l'icône de la barre de navigation
 const TabBarIcon = ({ Icon, name, color, focused }: TabBarIconProps) => {
-  const navBackgroundColor = '#E6FF99'; // Même couleur que le background de la barre
+  const navBackgroundColor = '#E6FF99'; // Couleur de fond de la barre
+  const iconSize = 24;
   
   return (
-    <View style={{ 
+    <Animated.View style={{ 
       alignItems: 'center',
       justifyContent: 'center',
-      transform: [{ translateY: focused ? -10 : 0 }],
+      transform: [{ translateY: focused ? -18 : 0 }],
       marginTop: focused ? 0 : 10
     }}>
       {focused && (
         <View style={{
           position: 'absolute',
-          top: -15,
-          width: 90, 
-          height: 30,
-          borderTopLeftRadius: 50,
-          borderTopRightRadius: 50,
-          backgroundColor: navBackgroundColor,
+          width: 60,
+          height: 60,
+          borderRadius: 30,
+          backgroundColor: '#ffffff',
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
         }} />
       )}
-      {Icon === 'Feather' ? (
-        // @ts-ignore - Ignorer les problèmes de typage pour les noms d'icônes
-        <Feather name={name} size={24} color={color} />
-      ) : (
-        // @ts-ignore - Ignorer les problèmes de typage pour les noms d'icônes
-        <FontAwesome5 name={name} size={24} color={color} />
-      )}
-    </View>
+      
+      <View style={{
+        width: focused ? 50 : 45,
+        height: focused ? 50 : 45,
+        borderRadius: 25,
+        backgroundColor: focused ? navBackgroundColor : 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+      }}>
+        {Icon === 'Feather' ? (
+          // @ts-ignore - Ignorer les problèmes de typage pour les noms d'icônes
+          <Feather name={name} size={focused ? iconSize + 4 : iconSize} color={focused ? '#1d4ed8' : color} />
+        ) : (
+          // @ts-ignore - Ignorer les problèmes de typage pour les noms d'icônes
+          <FontAwesome5 name={name} size={focused ? iconSize + 4 : iconSize} color={focused ? '#1d4ed8' : color} />
+        )}
+      </View>
+    </Animated.View>
   );
 };
 
@@ -336,6 +354,7 @@ export default function RootLayout() {
         paddingBottom: 5,
         paddingTop: 5
       },
+      tabBarShowLabel: false, // Désactiver l'affichage des labels
     }}>
       <Tabs.Screen
       name="index"
@@ -361,6 +380,15 @@ export default function RootLayout() {
         title: 'Page 2',
         tabBarIcon: ({ color, focused }) => (
           <TabBarIcon Icon="FontAwesome5" name="star" color={color} focused={focused} />
+        ),
+      }}
+      />
+      <Tabs.Screen
+      name="page3"
+      options={{
+        title: 'Settings',
+        tabBarIcon: ({ color, focused }) => (
+          <TabBarIcon Icon="Feather" name="settings" color={color} focused={focused} />
         ),
       }}
       />
@@ -418,4 +446,3 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
-

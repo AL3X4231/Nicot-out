@@ -51,11 +51,10 @@ export default function Index() {
           <FontAwesome5 name="cog" size={24} color="#1d4ed8" />
         </TouchableOpacity>
       </View>
-      <View className="flex-row rounded-xl bg-blue-200 mt-3 py-4 px-2">
+      <TouchableOpacity onPress={() => router.push('/page1')} className="flex-row rounded-xl bg-blue-200 mt-3 py-4 px-2">
         <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
         <Text className="mt-1 ml-2 " style={styles.insideText}>how are you today?</Text>
-
-      </View>
+      </TouchableOpacity>
       <View className="flex-row justify-between mt-10">
         <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700 ">My Progress</Text>
         <Entypo name="share-alternative" size={24} color="blue" className="mr-2" />
