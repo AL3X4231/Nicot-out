@@ -4,10 +4,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import * as Font from "expo-font";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import CircularProgress from '../assets/components/CircularProgress';
+import { useRouter } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import CircularProgress from '../assets/components/CircularProgress';
 const styles = StyleSheet.create({
   TitleText: {
     fontFamily: "BrugtyDemoRegular",
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
 
 export default function Index() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function loadFonts() {
@@ -41,10 +43,13 @@ export default function Index() {
     <>
     <StatusBar style="dark" />
     <ScrollView className="flex-1 bg-white p-4">
-      <View className="flex-row ">
+      <View className="flex-row justify-between items-center">
         <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700">
           Hi user4278
         </Text>
+        <TouchableOpacity onPress={() => router.push('/page3')}>
+          <FontAwesome5 name="cog" size={24} color="#1d4ed8" />
+        </TouchableOpacity>
       </View>
       <View className="flex-row rounded-xl bg-blue-200 mt-3 py-4 px-2">
         <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />

@@ -3,7 +3,7 @@ import Feather from '@expo/vector-icons/Feather';
 import * as Font from 'expo-font';
 import { Tabs, useRouter } from "expo-router";
 import React, { useEffect, useState } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View, Easing } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import '../global.css';
 
 // Interface pour les propriétés du composant TabBarIcon
@@ -70,7 +70,7 @@ export default function RootLayout() {
   useEffect(() => {
     async function loadFonts() {
       await Font.loadAsync({
-        KingthingsOrganica: require('../assets/fonts/Kingthings-Organica.ttf'),
+        KingthingsOrganica: require('../assets/fonts/Kingthings_Organica.ttf'),
       });
       setFontsLoaded(true);
     }
@@ -361,15 +361,6 @@ export default function RootLayout() {
         title: 'Page 2',
         tabBarIcon: ({ color, focused }) => (
           <TabBarIcon Icon="FontAwesome5" name="star" color={color} focused={focused} />
-        ),
-      }}
-      />
-      <Tabs.Screen
-      name="page3"
-      options={{
-        title: 'Paramètres',
-        tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon Icon="FontAwesome5" name="cog" color={color} focused={focused} />
         ),
       }}
       />
