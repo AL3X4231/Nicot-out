@@ -1,94 +1,181 @@
-import { useEffect, useState } from "react";
+import { Ionicons } from '@expo/vector-icons';
+import Slider from '@react-native-community/slider';
 import * as Font from "expo-font";
-import { Text, View, StyleSheet } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import Entypo from '@expo/vector-icons/Entypo';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useEffect, useState } from "react";
+import { Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import WebSlider from '../assets/components/WebSlider';
 
 const styles = StyleSheet.create({
   TitleText: {
     fontFamily: "BrugtyDemoRegular",
-    // Suppression des styles qui entrent en conflit avec TailwindCSS
   },
-  insideText:{
-    fontFamily:'Gallant'
-  }
+  insideText: {
+    fontFamily: 'Gallant'
+  },
+  chatBubble: {
+    padding: 12,
+    borderRadius: 16,
+    maxWidth: '80%',
+    marginVertical: 4,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    padding: 12,
+    flex: 1,
+    marginRight: 8,
+    backgroundColor: '#F3F4F6',
+    fontFamily: 'Gallant',
+  },
+});
 
+const SliderComponent = Platform.select({
+  web: WebSlider,
+  default: Slider,
 });
 
 export default function Index() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [step, setStep] = useState(0);
+  const [cigarettesCount, setCigarettesCount] = useState('');
+  const [confidence, setConfidence] = useState(5);
+  const [craving, setCraving] = useState(5);
+  const [messages, setMessages] = useState([
+    { text: "Hi! Let's talk about your progress today.", isBot: true }
+  ]);
 
   useEffect(() => {
     async function loadFonts() {
       await Font.loadAsync({
         BrugtyDemoRegular: require("../assets/fonts/BrugtyDemoRegular.ttf"),
-        Gallant : require("../assets/fonts/Kingthings Organica.ttf")
+        Gallant: require("../assets/fonts/Kingthings_Organica.ttf"),
       });
       setFontsLoaded(true);
     }
     loadFonts();
   }, []);
 
+  const handleNextStep = () => {
+    switch(step) {
+      case 0:
+        setMessages(prev => [...prev, 
+          { text: "How many cigarettes did you smoke today?", isBot: true }
+        ]);
+        setStep(1);
+        break;
+      case 1:
+        if (cigarettesCount) {
+          setMessages(prev => [...prev, 
+            { text: cigarettesCount, isBot: false },
+            { text: "On a scale of 1-10, how confident do you feel about tomorrow?", isBot: true }
+          ]);
+          setStep(2);
+        }
+        break;
+      case 2:
+        setMessages(prev => [...prev, 
+          { text: `Confidence level: ${confidence}/10`, isBot: false },
+          { text: "Last question: On a scale of 1-10, how strong is your craving right now?", isBot: true }
+        ]);
+        setStep(3);
+        break;
+      case 3:
+        setMessages(prev => [...prev, 
+          { text: `Craving level: ${craving}/10`, isBot: false },
+          { text: "Thank you for sharing! Keep going, you're doing great!", isBot: true }
+        ]);
+        setStep(4);
+        break;
+    }
+  };
+
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
   }
 
   return (
-    <View className="flex-1 bg-white p-4">
-      <View className="flex-row ">
-        <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700">
-          Hi user4278
-        </Text>
-      </View>
-      <View className="flex-row rounded-xl bg-blue-200 mt-3 py-4 px-2">
-        <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
-        <Text className="mt-1 ml-2 " style={styles.insideText}>how are you today?</Text>
+    <ScrollView className="flex-1 bg-white">
+      <View className="p-4">
+        {/* Welcome Header */}
+        <View className="flex-row items-center bg-white mb-4">
+          <Text style={styles.TitleText} className="text-3xl text-blue-700">
+            Daily Check-in
+          </Text>
+        </View>
 
-      </View>
-      <View className="flex-row justify-between mt-10">
-        <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700 ">My Progress</Text>
-        <Entypo name="share-alternative" size={24} color="blue" className="mr-2" />
-      </View>
-      
-      <View className="bg-limeGreen mt-2 pb-6 rounded-xl">
-        <View className="flex-row ml-2 mt-3 ">
-          <MaterialCommunityIcons name="clock-check-outline" size={24} color="black" />
-          <Text style={styles.insideText} className="mt-1 ml-1"> Stay clean for</Text>
+        {/* Welcome Message Box */}
+        <View className="flex-row rounded-xl bg-blue-200 py-4 px-4 mb-6 items-center">
+          <Ionicons name="chatbubble-ellipses-outline" size={24}
+           />
+          <Text style={styles.insideText} className="ml-2 ">
+            Let's track your progress today
+          </Text>
         </View>
-        <View className="flex-row justify-between px-20">
-          <View>
-              <Text style={styles.insideText} className="text-4xl">03</Text>
-              <Text style={styles.insideText} >months</Text>
-          </View>
-          <View>
-              <Text style={styles.insideText}className="text-4xl">03</Text>
-              <Text style={styles.insideText}>days</Text>
-          </View>
-          <View>
-              <Text style={styles.insideText} className="text-4xl">03</Text>
-              <Text style={styles.insideText}>hours</Text>
-          </View>
-        </View>
-        
 
-      </View>
-      <View className="flex-row justify-center py-3">
-        <View className="bg-limeGreen mx-3 rounded-xl px-5">
-          <View className="flex-row">
-            <FontAwesome5 name="money-bill-alt" size={24} color="green" className="mr-2"/>
-            <Text style={styles.insideText} className="mt-1"> money saved</Text>
-          </View>
-          
+        {/* Chat Messages */}
+        <View className="mt-4">
+          {messages.map((message, index) => (
+            <View key={index} 
+              className={`flex-row ${message.isBot ? 'justify-start' : 'justify-end'} mb-3`}
+            >
+              <View 
+                className={`${
+                  message.isBot 
+                    ? 'bg-blue-100 rounded-tr-xl rounded-tl-xl rounded-br-xl' 
+                    : 'bg-green-100 rounded-tl-xl rounded-tr-xl rounded-bl-xl'
+                } px-4 py-3`}
+              >
+                <Text style={styles.insideText} className="text-gray-800">
+                  {message.text}
+                </Text>
+              </View>
+            </View>
+          ))}
         </View>
-        <View className="bg-limeGreen mx-3 rounded-xl px-5">
-          <View className="flex-row">
-            <MaterialCommunityIcons name="cigar-off" size={24} color="black" />
-            <Text style={styles.insideText} className="mt-1"> ciggaretes</Text>
+
+        {/* Input Section */}
+        {step < 4 && (
+          <View className="flex-row items-center mt-6 mb-4">
+            {step === 1 && (
+              <TextInput
+                style={styles.input}
+                value={cigarettesCount}
+                onChangeText={setCigarettesCount}
+                keyboardType="numeric"
+                placeholder="Enter number of cigarettes"
+                placeholderTextColor="#9CA3AF"
+              />
+            )}
+            {(step === 2 || step === 3) && (
+              <View className="flex-1">
+                <SliderComponent
+                  style={{height: 40}}
+                  minimumValue={1}
+                  maximumValue={10}
+                  step={1}
+                  value={step === 2 ? confidence : craving}
+                  onValueChange={step === 2 ? setConfidence : setCraving}
+                  minimumTrackTintColor="#1D4ED8"
+                  maximumTrackTintColor="#E5E7EB"
+                  thumbTintColor="#1D4ED8"
+                />
+                <Text style={styles.insideText} className="text-center text-gray-600 mt-2">
+                  {step === 2 ? confidence : craving}/10
+                </Text>
+              </View>
+            )}
+            <TouchableOpacity 
+              className="bg-blue-700 px-6 py-3 rounded-xl ml-2"
+              onPress={handleNextStep}
+            >
+              <Text style={styles.insideText} className="text-white">
+                Next
+              </Text>
+            </TouchableOpacity>
           </View>
-        </View>
+        )}
       </View>
-    </View>
+    </ScrollView>
   );
 }

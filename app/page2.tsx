@@ -24,7 +24,7 @@ export default function Index() {
     async function loadFonts() {
       await Font.loadAsync({
         BrugtyDemoRegular: require("../assets/fonts/BrugtyDemoRegular.ttf"),
-        Gallant : require("../assets/fonts/Kingthings Organica.ttf")
+        Gallant : require("../assets/fonts/Kingthings_Organica.ttf")
       });
       setFontsLoaded(true);
     }
