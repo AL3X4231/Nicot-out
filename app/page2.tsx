@@ -1,20 +1,33 @@
-import { useEffect, useState } from "react";
-import * as Font from "expo-font";
-import { Text, View, StyleSheet } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import * as Font from "expo-font";
+import { useEffect, useState } from "react";
+import { Dimensions, StyleSheet, Text, View, ScrollView } from "react-native";
+import { LineChart } from "react-native-chart-kit";
 
 const styles = StyleSheet.create({
   TitleText: {
     fontFamily: "BrugtyDemoRegular",
-    // Suppression des styles qui entrent en conflit avec TailwindCSS
   },
-  insideText:{
-    fontFamily:'Gallant'
+  insideText: {
+    fontFamily: 'Gallant'
+  },
+  gradientCard: {
+    backgroundColor: '#E8FFB0',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+  },
+  statTitle: {
+    fontFamily: 'BrugtyDemoRegular',
+    fontSize: 24,
+    color: '#000',
+    marginBottom: 8,
+  },
+  statValue: {
+    fontFamily: 'Gallant',
+    fontSize: 20,
+    color: '#666',
   }
-
 });
 
 export default function Index() {
@@ -24,7 +37,7 @@ export default function Index() {
     async function loadFonts() {
       await Font.loadAsync({
         BrugtyDemoRegular: require("../assets/fonts/BrugtyDemoRegular.ttf"),
-        Gallant : require("../assets/fonts/Kingthings_Organica.ttf")
+        Gallant: require("../assets/fonts/Kingthings_Organica.ttf")
       });
       setFontsLoaded(true);
     }
@@ -36,59 +49,86 @@ export default function Index() {
   }
 
   return (
-    <View className="flex-1 bg-white p-4">
-      <View className="flex-row ">
-        <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700">
-          Hi user4278
-        </Text>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 16 }}>
+      <Text style={styles.TitleText} className="text-4xl text-blue-700 mb-6">
+        Statistics Today
+      </Text>
+      {/* Cravings Statistics Card */}
+      <View style={[styles.gradientCard, { height: 200 }]}>
+        <Text style={styles.statTitle}>Cravings Statistic</Text>
+        <Text style={styles.statValue} className="mb-4">6 Cravings on May 21</Text>
+        <LineChart
+          data={{
+            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            datasets: [{
+              data: [20, 25, 17, 19, 7]
+            }]
+          }}
+          width={Dimensions.get("window").width - 48}
+          height={100}
+          chartConfig={{
+            backgroundColor: "#E8FFB0",
+            backgroundGradientFrom: "#E8FFB0",
+            backgroundGradientTo: "#E8FFB0",
+            decimalPlaces: 0,
+            color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(102, 102, 102, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: "6",
+              strokeWidth: "2",
+              stroke: "#6366F1"
+            },
+            propsForBackgroundLines: {
+              strokeDasharray: "", // Solid lines
+              stroke: "#D1D5DB",  // Light gray lines
+              strokeOpacity: 0.4
+            }
+          }}
+          bezier
+          style={{
+            marginVertical: 8,
+            borderRadius: 16
+          }}
+        />
       </View>
-      <View className="flex-row rounded-xl bg-blue-200 mt-3 py-4 px-2">
-        <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
-        <Text className="mt-1 ml-2 " style={styles.insideText}>how are you today?</Text>
 
+      {/* Absorbed Substances Card */}
+      <View style={styles.gradientCard}>
+        <Text style={styles.statTitle}>Absorbed Substances</Text>
+        <Text style={styles.statValue}>0.89 mg this week</Text>
       </View>
-      <View className="flex-row justify-between mt-10">
-        <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700 ">My Progress</Text>
-        <Entypo name="share-alternative" size={24} color="blue" className="mr-2" />
+
+      {/* Smoked Cigarettes Card */}
+      <View style={styles.gradientCard}>
+        <Text style={styles.statTitle}>Smoked Cigarettes</Text>
+        <Text style={styles.statValue}>13 cigarettes attempted</Text>
       </View>
+
+      {/* Stay Clean Card */}
+      <View style={styles.gradientCard}>
+        <Text style={styles.statTitle}>Stay Clean For</Text>
+        <Text style={styles.statValue}>120 Days</Text>
+      </View>
+
+      {/* Achievement Card */}
+      <View style={styles.gradientCard}>
+        <Text style={styles.statTitle}>Achievement Unlocked</Text>
+        <Text style={styles.statValue}>5 / 250 Achievement</Text>
+      </View>
+
+      {/* Emotions Card */}
+      <View style={styles.gradientCard}>
+        <Text style={styles.statTitle}>Emotions</Text>
+        <View className="flex-row items-center">
+          <MaterialCommunityIcons name="emoticon" size={24} color="#6366F1" />
+          <Text style={styles.statValue} className="ml-2">Somewhat Confident</Text>
+        </View>
+      </View>
+
       
-      <View className="bg-limeGreen mt-2 pb-6 rounded-xl">
-        <View className="flex-row ml-2 mt-3 ">
-          <MaterialCommunityIcons name="clock-check-outline" size={24} color="black" />
-          <Text style={styles.insideText} className="mt-1 ml-1"> Stay clean for</Text>
-        </View>
-        <View className="flex-row justify-between px-20">
-          <View>
-              <Text style={styles.insideText} className="text-4xl">03</Text>
-              <Text style={styles.insideText} >months</Text>
-          </View>
-          <View>
-              <Text style={styles.insideText}className="text-4xl">03</Text>
-              <Text style={styles.insideText}>days</Text>
-          </View>
-          <View>
-              <Text style={styles.insideText} className="text-4xl">03</Text>
-              <Text style={styles.insideText}>hours</Text>
-          </View>
-        </View>
-        
-
-      </View>
-      <View className="flex-row justify-center py-3">
-        <View className="bg-limeGreen mx-3 rounded-xl px-5">
-          <View className="flex-row">
-            <FontAwesome5 name="money-bill-alt" size={24} color="green" className="mr-2"/>
-            <Text style={styles.insideText} className="mt-1"> money saved</Text>
-          </View>
-          
-        </View>
-        <View className="bg-limeGreen mx-3 rounded-xl px-5">
-          <View className="flex-row">
-            <MaterialCommunityIcons name="cigar-off" size={24} color="black" />
-            <Text style={styles.insideText} className="mt-1"> ciggaretes</Text>
-          </View>
-        </View>
-      </View>
-    </View>
+    </ScrollView>
   );
 }

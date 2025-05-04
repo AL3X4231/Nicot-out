@@ -101,8 +101,8 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (showLogo) {
-      // Animation d'entrée avec rebond et opacité
+  if (showLogo) {
+    requestAnimationFrame(() => {
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
@@ -111,26 +111,25 @@ export default function RootLayout() {
         }),
         Animated.spring(logoEntranceAnim, {
           toValue: 1,
-          friction: 5, // Plus la valeur est basse, plus l'effet de rebond est prononcé
+          friction: 5,
           tension: 40,
           useNativeDriver: true,
         })
       ]).start(() => setCanProceed(true));
-    }
-  }, [showLogo]);
+    });
+  }
+}, [showLogo]);
 
-  // Animation d'entrée du nom de l'app
-  useEffect(() => {
-    if (showAppName) {
-      // Animation de rotation pour la sortie du logo
+useEffect(() => {
+  if (showAppName) {
+    requestAnimationFrame(() => {
       Animated.timing(logoRotationAnim, {
         toValue: 1,
         duration: 500,
         easing: Easing.out(Easing.ease),
         useNativeDriver: true,
       }).start();
-      
-      // Fade out logo and button
+
       Animated.parallel([
         Animated.timing(logoAnim, {
           toValue: 0,
@@ -143,7 +142,6 @@ export default function RootLayout() {
           useNativeDriver: true,
         })
       ]).start(() => {
-        // Fade in app name
         Animated.timing(appNameAnim, {
           toValue: 1,
           duration: 700,
@@ -159,9 +157,9 @@ export default function RootLayout() {
           }, 700);
         });
       });
-    }
-  }, [showAppName]);
-
+    });
+  }
+}, [showAppName]);
   // Affichage de la page de politique
   if (showPolicy) {
     return (

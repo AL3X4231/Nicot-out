@@ -22,6 +22,7 @@ export default function Page3() {
   const [showShareAppPopup, setShowShareAppPopup] = useState(false);
 
   return (
+    <>
     <ScrollView className="flex-1 bg-white">
       <View className="px-4 py-6">
         <Text style={{ fontFamily: "BrugtyDemoRegular" }} className="text-5xl font-bold text-indigo-700 mb-6">Settings</Text>
@@ -105,7 +106,7 @@ export default function Page3() {
           <Text className="text-lg text-gray-700">App Version 1.0</Text>
         </View>
       </View>
-
+      </ScrollView>
       {/* My Account Popups */}
       <AccountDetailsPopup 
         isVisible={showAccountDetailsPopup}
@@ -169,6 +170,7 @@ export default function Page3() {
         isVisible={showShareAppPopup}
         onClose={() => setShowShareAppPopup(false)}
       />
-    </ScrollView>
+    
+    </>
   );
 }
