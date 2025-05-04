@@ -28,6 +28,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3F4F6',
     fontFamily: 'Gallant',
   },
+  correctionButton: {
+    backgroundColor: '#E5E7EB',  // Gris clair plus subtil
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 24,
+    marginBottom: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+  },
+  correctionButtonText: {
+    color: '#4B5563',  // Gris foncé pour le texte
+    fontFamily: 'Gallant',
+    fontSize: 14,
+  },
 });
 
 const SliderComponent = Platform.select({
@@ -88,6 +103,18 @@ export default function Index() {
         setStep(4);
         break;
     }
+  };
+
+  const handleCorrection = () => {
+    // Réinitialiser toutes les valeurs pour permettre à l'utilisateur de recommencer
+    setCigarettesCount('');
+    setConfidence(5);
+    setCraving(5);
+    setMessages([
+      { text: "Hi! Let's correct your check-in for today.", isBot: true },
+      { text: "How many cigarettes did you smoke today?", isBot: true }
+    ]);
+    setStep(1);
   };
 
   if (!fontsLoaded) {
@@ -174,6 +201,21 @@ export default function Index() {
               </Text>
             </TouchableOpacity>
           </View>
+        )}
+
+        {/* Espace pour pousser le bouton vers le bas */}
+        {step === 4 && <View style={{ flex: 1, minHeight: 40 }} />}
+
+        {/* Correction Button - plus discret et en bas de page */}
+        {step === 4 && (
+          <TouchableOpacity 
+            style={styles.correctionButton}
+            onPress={handleCorrection}
+          >
+            <Text style={styles.correctionButtonText}>
+              Corriger mon check-in
+            </Text>
+          </TouchableOpacity>
         )}
       </View>
     </ScrollView>

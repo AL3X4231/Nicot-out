@@ -8,20 +8,27 @@ import { useRouter } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import CigarettePopup from '../assets/components/CigarettePopup';
 import CircularProgress from '../assets/components/CircularProgress';
+import LifeDaysPopup from '../assets/components/LifeDaysPopup';
+import MoneyPopup from '../assets/components/MoneyPopup';
+import TimeSavedPopup from '../assets/components/TimeSavedPopup';
+
 const styles = StyleSheet.create({
   TitleText: {
     fontFamily: "BrugtyDemoRegular",
-    // Suppression des styles qui entrent en conflit avec TailwindCSS
   },
   insideText:{
     fontFamily:'Gallant'
   }
-
 });
 
 export default function Index() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [showMoneyPopup, setShowMoneyPopup] = useState(false);
+  const [showCigarettePopup, setShowCigarettePopup] = useState(false);
+  const [showLifeDaysPopup, setShowLifeDaysPopup] = useState(false);
+  const [showTimeSavedPopup, setShowTimeSavedPopup] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -79,11 +86,13 @@ export default function Index() {
               <Text style={styles.insideText}>hours</Text>
           </View>
         </View>
-        
-
       </View>
+      
       <View className="flex-row justify-between w-full py-3">
-        <View className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6">
+        <TouchableOpacity 
+          className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6"
+          onPress={() => setShowMoneyPopup(true)}
+        >
           <View className="items-center">
             <View className="flex-row items-center mb-2">
               <FontAwesome5 name="money-bill-alt" size={24} color="green" className="mr-2"/>
@@ -91,8 +100,12 @@ export default function Index() {
             </View>
             <Text style={styles.insideText} className="text-xl font-bold">1000$</Text>
           </View>
-        </View>
-        <View className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6">
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6"
+          onPress={() => setShowCigarettePopup(true)}
+        >
           <View className="items-center">
             <View className="flex-row items-center mb-2">
               <MaterialCommunityIcons name="cigar-off" size={24} color="black" />
@@ -100,10 +113,14 @@ export default function Index() {
             </View>
             <Text style={styles.insideText} className="text-xl font-bold">2039</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
+      
       <View className="flex-row justify-between w-full py-3">
-        <View className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6">
+        <TouchableOpacity 
+          className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6"
+          onPress={() => setShowLifeDaysPopup(true)}
+        >
           <View className="items-center">
             <View className="flex-row justify-between items-center mb-2">
               <MaterialCommunityIcons name="timer-sand" size={24} color="black" />
@@ -111,8 +128,12 @@ export default function Index() {
             </View>
             <Text style={styles.insideText} className="text-xl font-bold">30</Text>
           </View>
-        </View>
-        <View className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6">
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          className="flex-1 bg-limeGreen mx-2 rounded-3xl px-4 py-6"
+          onPress={() => setShowTimeSavedPopup(true)}
+        >
           <View className="items-center">
             <View className="flex-row justify-between items-center mb-2">
               <MaterialIcons name="more-time" size={24} color="black" />
@@ -120,8 +141,9 @@ export default function Index() {
             </View>
             <Text style={styles.insideText} className="text-xl font-bold">8.2</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
+      
       <View className="mt-6">
         <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700">My Health</Text>
         <View className="flex-row justify-between mt-4">
@@ -232,6 +254,57 @@ export default function Index() {
         </View>
       </View>
     </ScrollView>
+    
+    {/* Money Popup */}
+    <MoneyPopup
+      isVisible={showMoneyPopup}
+      onClose={() => setShowMoneyPopup(false)}
+      amount="1000$"
+      details={{
+        daily: '3.33$',
+        weekly: '23.31$',
+        monthly: '100$',
+        yearly: '1200$'
+      }}
+    />
+
+    {/* Cigarette Popup */}
+    <CigarettePopup
+      isVisible={showCigarettePopup}
+      onClose={() => setShowCigarettePopup(false)}
+      amount="2039"
+      details={{
+        daily: '7',
+        weekly: '49',
+        monthly: '210',
+        yearly: '2555'
+      }}
+    />
+    
+    {/* Life Days Popup */}
+    <LifeDaysPopup
+      isVisible={showLifeDaysPopup}
+      onClose={() => setShowLifeDaysPopup(false)}
+      days="30"
+      details={{
+        hoursPerDay: '4',
+        expectedLifespan: '5+ years',
+        qualityImprovement: '35%'
+      }}
+    />
+    
+    {/* Time Saved Popup */}
+    <TimeSavedPopup
+      isVisible={showTimeSavedPopup}
+      onClose={() => setShowTimeSavedPopup(false)}
+      days="8.2"
+      details={{
+        minutesPerCigarette: '5-10',
+        hoursPerWeek: '9.5',
+        daysPerMonth: '8.2',
+        reducedConsumption: '70%'
+      }}
+    />
     </>
   );
 }
