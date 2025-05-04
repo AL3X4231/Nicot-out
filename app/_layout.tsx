@@ -368,7 +368,7 @@ useEffect(() => {
       options={{
         title: 'Page 1',
         tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon Icon="FontAwesome5" name="heart" color={color} focused={focused} />
+          <TabBarIcon Icon="FontAwesome5" name="calendar-alt" color={color} focused={focused} />
         ),
       }}
       />
@@ -377,7 +377,7 @@ useEffect(() => {
       options={{
         title: 'Page 2',
         tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon Icon="FontAwesome5" name="star" color={color} focused={focused} />
+          <TabBarIcon Icon="FontAwesome5" name="chart-bar" color={color} focused={focused} />
         ),
       }}
       />

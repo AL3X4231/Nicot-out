@@ -208,14 +208,16 @@ export default function Index() {
 
         {/* Correction Button - plus discret et en bas de page */}
         {step === 4 && (
-          <TouchableOpacity 
-            style={styles.correctionButton}
-            onPress={handleCorrection}
-          >
-            <Text style={styles.correctionButtonText}>
-              Corriger mon check-in
-            </Text>
-          </TouchableOpacity>
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <TouchableOpacity 
+              style={[styles.correctionButton, { marginBottom: 24 }]}
+              onPress={handleCorrection}
+            >
+              <Text style={styles.correctionButtonText}>
+                Corriger mon check-in
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </ScrollView>
