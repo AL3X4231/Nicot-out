@@ -1,5 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import LottieView from 'lottie-react-native';
 import React, { useState } from 'react';
 import { Dimensions, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -17,6 +18,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   const [showBirthDatePicker, setShowBirthDatePicker] = useState(false);
   const [showQuitDatePicker, setShowQuitDatePicker] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
+  const [showAnimation, setShowAnimation] = useState(false);
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month, 0).getDate();
@@ -44,6 +46,29 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
       setQuitDate(selectedDate);
     }
   };
+
+  const handleFinish = () => {
+    setShowAnimation(true);
+  };
+
+  const handleAnimationFinish = () => {
+    setShowAnimation(false);
+    if (onFinish) onFinish();
+  };
+
+  if (showAnimation) {
+    return (
+      <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center' }}>
+        <LottieView
+          source={require('../animations/handshake2.json')}
+          autoPlay
+          loop={false}
+          onAnimationFinish={handleAnimationFinish}
+          style={{ width: 320, height: 320 }}
+        />
+      </View>
+    );
+  }
 
   const renderDatePicker = () => {
     if (Platform.OS === 'ios') {
@@ -219,7 +244,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           multiline
         />
 
-        <TouchableOpacity style={styles.finishButton} onPress={onFinish} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.finishButton} onPress={handleFinish} activeOpacity={0.85}>
           <Text style={styles.finishButtonText}>Finish</Text>
         </TouchableOpacity>
       </View>

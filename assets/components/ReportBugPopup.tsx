@@ -26,7 +26,7 @@ const BugSeverityOption = ({
   value: string;
   selected: boolean;
   onSelect: () => void;
-  icon: string;
+  icon: React.ComponentProps<typeof MaterialIcons>['name'];
   color: string;
 }) => (
   <TouchableOpacity 

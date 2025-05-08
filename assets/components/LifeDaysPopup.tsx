@@ -111,7 +111,22 @@ const LifeDaysPopup = ({
           
           <View style={styles.progressBarContainer}>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: details.qualityImprovement }]} />
+              <View
+                style={[
+                  styles.progressFill,
+                  {
+                    width: `${
+                      Math.max(
+                        0,
+                        Math.min(
+                          100,
+                          parseFloat(details.qualityImprovement.replace('%', ''))
+                        )
+                      )
+                    }%`
+                  }
+                ]}
+              />
             </View>
             <Text style={styles.progressText}>{details.qualityImprovement}</Text>
           </View>

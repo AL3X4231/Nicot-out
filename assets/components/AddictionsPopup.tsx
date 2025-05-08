@@ -107,7 +107,7 @@ const AddictionsPopup = ({
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="cigarette" size={24} color="#4B5563" />
+            <FontAwesome5 name="smoking" size={24} color="#4B5563" />
             <Text style={styles.sectionTitle}>Smoking Statistics</Text>
           </View>
 
