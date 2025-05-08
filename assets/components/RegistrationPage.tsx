@@ -1,6 +1,7 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -13,6 +14,9 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   const [perDay, setPerDay] = useState('');
   const [quitDate, setQuitDate] = useState(new Date(2021, 0, 1));
   const [motivation, setMotivation] = useState('');
+  const [showBirthDatePicker, setShowBirthDatePicker] = useState(false);
+  const [showQuitDatePicker, setShowQuitDatePicker] = useState(false);
+  const [birthDate, setBirthDate] = useState(new Date());
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month, 0).getDate();
@@ -24,21 +28,73 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   ];
   const years = Array.from({ length: 2025 - 1920 + 1 }, (_, i) => 2025 - i);
 
-  return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} bounces={false}>
-      <Text style={styles.header}>Welcome!</Text>
-      <Text style={styles.subHeader}>Let's get to know you</Text>
+  const onBirthDateChange = (event: any, selectedDate?: Date) => {
+    setShowBirthDatePicker(false);
+    if (selectedDate) {
+      setBirthDate(selectedDate);
+      setBirthDay(selectedDate.getDate());
+      setBirthMonth(selectedDate.getMonth() + 1);
+      setBirthYear(selectedDate.getFullYear());
+    }
+  };
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Your name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          placeholderTextColor="#18122B33"
-          value={name}
-          onChangeText={setName}
-        />
+  const onQuitDateChange = (event: any, selectedDate?: Date) => {
+    setShowQuitDatePicker(false);
+    if (selectedDate) {
+      setQuitDate(selectedDate);
+    }
+  };
 
+  const renderDatePicker = () => {
+    if (Platform.OS === 'ios') {
+      return (
+        <>
+          {/* Birth Date Section */}
+          <Text style={styles.label}>Your birthday</Text>
+          <TouchableOpacity 
+            style={styles.dateButton}
+            onPress={() => setShowBirthDatePicker(true)}
+          >
+            <Text style={styles.dateButtonText}>
+              {`${birthDay}/${birthMonth}/${birthYear}`}
+            </Text>
+          </TouchableOpacity>
+          {showBirthDatePicker && (
+            <DateTimePicker
+              value={birthDate}
+              mode="date"
+              display="spinner"
+              onChange={onBirthDateChange}
+              maximumDate={new Date()}
+              minimumDate={new Date(1920, 0, 1)}
+            />
+          )}
+
+          {/* Quit Date Section */}
+          <Text style={styles.label}>Quit date</Text>
+          <TouchableOpacity 
+            style={styles.dateButton}
+            onPress={() => setShowQuitDatePicker(true)}
+          >
+            <Text style={styles.dateButtonText}>
+              {quitDate.toLocaleDateString()}
+            </Text>
+          </TouchableOpacity>
+          {showQuitDatePicker && (
+            <DateTimePicker
+              value={quitDate}
+              mode="date"
+              display="spinner"
+              onChange={onQuitDateChange}
+              minimumDate={new Date()}
+            />
+          )}
+        </>
+      );
+    }
+
+    return (
+      <>
         <Text style={styles.label}>Your birthday</Text>
         <View style={styles.rowPickerGroup}>
           <View style={[styles.pickerWrapper, styles.roundPicker, { flex: 1 }]}>
@@ -76,26 +132,6 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           </View>
         </View>
 
-        <Text style={styles.label}>Packet price</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="14 €"
-          placeholderTextColor="#18122B33"
-          value={packetPrice}
-          onChangeText={setPacketPrice}
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>How many per day?</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="5 cigarettes"
-          placeholderTextColor="#18122B33"
-          value={perDay}
-          onChangeText={setPerDay}
-          keyboardType="numeric"
-        />
-
         <Text style={styles.label}>Quit date</Text>
         <View style={styles.rowPickerGroup}>
           <View style={[styles.pickerWrapper, styles.roundPicker, { flex: 1 }]}>
@@ -132,6 +168,46 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
             </Picker>
           </View>
         </View>
+      </>
+    );
+  };
+
+  return (
+    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} bounces={false}>
+      <Text style={styles.header}>Welcome!</Text>
+      <Text style={styles.subHeader}>Let's get to know you</Text>
+
+      <View style={styles.card}>
+        <Text style={styles.label}>Your name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          placeholderTextColor="#18122B33"
+          value={name}
+          onChangeText={setName}
+        />
+
+        {renderDatePicker()}
+
+        <Text style={styles.label}>Packet price</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="14 €"
+          placeholderTextColor="#18122B33"
+          value={packetPrice}
+          onChangeText={setPacketPrice}
+          keyboardType="numeric"
+        />
+
+        <Text style={styles.label}>How many per day?</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="5 cigarettes"
+          placeholderTextColor="#18122B33"
+          value={perDay}
+          onChangeText={setPerDay}
+          keyboardType="numeric"
+        />
 
         <Text style={styles.label}>Your motivation</Text>
         <TextInput
@@ -275,6 +351,23 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
+  },
+  dateButton: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  dateButtonText: {
+    color: '#18122B',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
 
