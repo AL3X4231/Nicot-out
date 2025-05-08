@@ -73,6 +73,7 @@ export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
   const [showReadPolicy, setShowReadPolicy] = useState(false);
+  const [showRegistration, setShowRegistration] = useState(false);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const logoAnim = React.useRef(new Animated.Value(1)).current;
   const buttonAnim = React.useRef(new Animated.Value(1)).current;
@@ -160,6 +161,15 @@ useEffect(() => {
     });
   }
 }, [showAppName]);
+  // Affichage de la page d'inscription
+  if (showRegistration) {
+    const RegistrationPage = require('../assets/components/RegistrationPage').default;
+    return (
+      <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center' }}>
+        <RegistrationPage onFinish={() => setShowRegistration(false)} />
+      </View>
+    );
+  }
   // Affichage de la page de politique
   if (showPolicy) {
     return (
@@ -305,6 +315,32 @@ useEffect(() => {
                 alignItems: 'center',
               }}>
                 <Text style={{ color: 'white', fontSize: 18 }}>Cliquez ici</Text>
+              </Animated.View>
+            )}
+            {/* Bouton Read Policy animé */}
+            {showReadPolicy && (
+              <Animated.View style={{
+                opacity: readPolicyAnim,
+                position: 'absolute',
+                bottom: 90, // Adjusted to move the button slightly higher
+                left: 0,
+                right: 0,
+                alignItems: 'center',
+                zIndex: 3,
+              }}>
+                <TouchableOpacity
+                  style={[styles.splashButton, { backgroundColor: '#D2C0EA', paddingVertical: 8 }]} // Reduced padding to make the button thinner
+                  onPress={() => setShowRegistration(true)}
+                >
+                  <Text style={{ 
+                    color: 'black', 
+                    fontSize: 18, 
+                    fontWeight: 'bold',
+                    fontFamily: 'KingthingsOrganica'
+                  }}>
+                    Inscription
+                  </Text>
+                </TouchableOpacity>
               </Animated.View>
             )}
             {/* Bouton Read Policy animé */}
