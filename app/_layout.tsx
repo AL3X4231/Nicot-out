@@ -18,9 +18,9 @@ interface TabBarIconProps {
 const TabBarIcon = ({ Icon, name, color, focused }: TabBarIconProps) => {
   const navBackgroundColor = '#E6FF99'; // Couleur de fond de la barre
   const iconSize = 24;
-  
+
   return (
-    <Animated.View style={{ 
+    <Animated.View style={{
       alignItems: 'center',
       justifyContent: 'center',
       transform: [{ translateY: focused ? -18 : 0 }],
@@ -43,7 +43,7 @@ const TabBarIcon = ({ Icon, name, color, focused }: TabBarIconProps) => {
           elevation: 5,
         }} />
       )}
-      
+
       <View style={{
         width: focused ? 50 : 45,
         height: focused ? 50 : 45,
@@ -79,11 +79,11 @@ export default function RootLayout() {
   const buttonAnim = React.useRef(new Animated.Value(1)).current;
   const appNameAnim = React.useRef(new Animated.Value(0)).current;
   const readPolicyAnim = React.useRef(new Animated.Value(0)).current;
-  
+
   // Nouvelles animations pour l'entrée et la sortie du logo
   const logoEntranceAnim = React.useRef(new Animated.Value(0)).current; // Pour l'entrée avec rebond
   const logoRotationAnim = React.useRef(new Animated.Value(0)).current; // Pour la rotation lors de la sortie
-  
+
   const router = useRouter();
 
   useEffect(() => {
@@ -102,65 +102,65 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-  if (showLogo) {
-    requestAnimationFrame(() => {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 800,
-          useNativeDriver: true,
-        }),
-        Animated.spring(logoEntranceAnim, {
-          toValue: 1,
-          friction: 5,
-          tension: 40,
-          useNativeDriver: true,
-        })
-      ]).start(() => setCanProceed(true));
-    });
-  }
-}, [showLogo]);
+    if (showLogo) {
+      requestAnimationFrame(() => {
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.spring(logoEntranceAnim, {
+            toValue: 1,
+            friction: 5,
+            tension: 40,
+            useNativeDriver: true,
+          })
+        ]).start(() => setCanProceed(true));
+      });
+    }
+  }, [showLogo]);
 
-useEffect(() => {
-  if (showAppName) {
-    requestAnimationFrame(() => {
-      Animated.timing(logoRotationAnim, {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }).start();
-
-      Animated.parallel([
-        Animated.timing(logoAnim, {
-          toValue: 0,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(buttonAnim, {
-          toValue: 0,
-          duration: 400,
-          useNativeDriver: true,
-        })
-      ]).start(() => {
-        Animated.timing(appNameAnim, {
+  useEffect(() => {
+    if (showAppName) {
+      requestAnimationFrame(() => {
+        Animated.timing(logoRotationAnim, {
           toValue: 1,
-          duration: 700,
+          duration: 500,
+          easing: Easing.out(Easing.ease),
           useNativeDriver: true,
-        }).start(() => {
-          setTimeout(() => {
-            setShowReadPolicy(true);
-            Animated.timing(readPolicyAnim, {
-              toValue: 1,
-              duration: 600,
-              useNativeDriver: true,
-            }).start();
-          }, 700);
+        }).start();
+
+        Animated.parallel([
+          Animated.timing(logoAnim, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonAnim, {
+            toValue: 0,
+            duration: 400,
+            useNativeDriver: true,
+          })
+        ]).start(() => {
+          Animated.timing(appNameAnim, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+          }).start(() => {
+            setTimeout(() => {
+              setShowReadPolicy(true);
+              Animated.timing(readPolicyAnim, {
+                toValue: 1,
+                duration: 600,
+                useNativeDriver: true,
+              }).start();
+            }, 700);
+          });
         });
       });
-    });
-  }
-}, [showAppName]);
+    }
+  }, [showAppName]);
   // Affichage de la page d'inscription
   if (showRegistration) {
     const RegistrationPage = require('../assets/components/RegistrationPage').default;
@@ -174,48 +174,48 @@ useEffect(() => {
   if (showPolicy) {
     return (
       <View style={styles.policyContainer}>
-        <Animated.ScrollView 
-          style={{flex: 1, width: '100%', paddingHorizontal: 20}}
-          contentContainerStyle={{paddingVertical: 40}}
+        <Animated.ScrollView
+          style={{ flex: 1, width: '100%', paddingHorizontal: 20 }}
+          contentContainerStyle={{ paddingVertical: 40 }}
           showsVerticalScrollIndicator={true}
         >
           <Animated.Text style={{ color: '#D2C0EA', fontSize: 28, marginBottom: 20, textAlign: 'center', fontWeight: 'bold', opacity: fadeAnim }}>
             Politique de Confidentialité
           </Animated.Text>
-          
+
           <Animated.Text style={{ color: 'white', fontSize: 16, marginBottom: 15, lineHeight: 22, opacity: fadeAnim }}>
             Bienvenue dans NICOT'OUT, votre compagnon pour arrêter de fumer. Notre mission est de vous aider à vivre une vie sans tabac.
           </Animated.Text>
-          
+
           <Animated.Text style={{ color: 'white', fontSize: 16, marginBottom: 15, lineHeight: 22, opacity: fadeAnim }}>
-            <Text style={{fontWeight: 'bold', color: '#D2C0EA'}}>Données collectées :</Text>{'\n'}
+            <Text style={{ fontWeight: 'bold', color: '#D2C0EA' }}>Données collectées :</Text>{'\n'}
             • Données de progression : jours sans tabac, cigarettes évitées{'\n'}
             • Économies réalisées{'\n'}
             • Objectifs personnels{'\n'}
             • État de santé auto-évalué
           </Animated.Text>
-          
+
           <Animated.Text style={{ color: 'white', fontSize: 16, marginBottom: 15, lineHeight: 22, opacity: fadeAnim }}>
-            <Text style={{fontWeight: 'bold', color: '#D2C0EA'}}>Utilisation des données :</Text>{'\n'}
+            <Text style={{ fontWeight: 'bold', color: '#D2C0EA' }}>Utilisation des données :</Text>{'\n'}
             Nous utilisons ces informations uniquement pour vous aider dans votre parcours d'arrêt du tabac, en vous proposant des conseils personnalisés et en suivant votre progression.
           </Animated.Text>
-          
+
           <Animated.Text style={{ color: 'white', fontSize: 16, marginBottom: 15, lineHeight: 22, opacity: fadeAnim }}>
-            <Text style={{fontWeight: 'bold', color: '#D2C0EA'}}>Protection de la vie privée :</Text>{'\n'}
+            <Text style={{ fontWeight: 'bold', color: '#D2C0EA' }}>Protection de la vie privée :</Text>{'\n'}
             Vos données personnelles ne sont jamais vendues à des tiers. Elles sont stockées de manière sécurisée et accessibles uniquement à notre équipe pour améliorer l'application.
           </Animated.Text>
-          
+
           <Animated.Text style={{ color: 'white', fontSize: 16, marginBottom: 15, lineHeight: 22, opacity: fadeAnim }}>
-            <Text style={{fontWeight: 'bold', color: '#D2C0EA'}}>Droit à l'oubli :</Text>{'\n'}
+            <Text style={{ fontWeight: 'bold', color: '#D2C0EA' }}>Droit à l'oubli :</Text>{'\n'}
             Vous pouvez demander la suppression complète de vos données à tout moment depuis les paramètres de l'application.
           </Animated.Text>
-          
+
           <Animated.Text style={{ color: 'white', fontSize: 16, marginBottom: 15, lineHeight: 22, opacity: fadeAnim }}>
-            <Text style={{fontWeight: 'bold', color: '#D2C0EA'}}>Nous contacter :</Text>{'\n'}
+            <Text style={{ fontWeight: 'bold', color: '#D2C0EA' }}>Nous contacter :</Text>{'\n'}
             Pour toute question concernant cette politique de confidentialité, veuillez nous contacter à privacy@nicotout.com
           </Animated.Text>
         </Animated.ScrollView>
-        
+
         <TouchableOpacity
           style={[styles.letsGoButton, { backgroundColor: '#D2C0EA' }]}
           onPress={() => {
@@ -223,9 +223,9 @@ useEffect(() => {
             setShowSplash(false);
           }}
         >
-          <Text style={{ 
-            color: 'black', 
-            fontSize: 20, 
+          <Text style={{
+            color: 'black',
+            fontSize: 20,
             fontWeight: 'bold',
             fontFamily: 'KingthingsOrganica'
           }}>
@@ -254,21 +254,25 @@ useEffect(() => {
               <Animated.Image
                 source={require('../assets/images/Vector.png')}
                 style={[
-                  styles.logo, 
-                  { 
+                  styles.logo,
+                  {
                     opacity: logoAnim,
                     transform: [
                       // Animation d'entrée avec rebond
-                      { scale: logoEntranceAnim.interpolate({
+                      {
+                        scale: logoEntranceAnim.interpolate({
                           inputRange: [0, 1],
                           outputRange: [0.3, 1]
-                      })},
+                        })
+                      },
                       // Animation de rotation à la sortie 
-                      { rotate: logoRotationAnim.interpolate({
+                      {
+                        rotate: logoRotationAnim.interpolate({
                           inputRange: [0, 1],
                           outputRange: ['0deg', '360deg']
-                      })}
-                    ] 
+                        })
+                      }
+                    ]
                   }
                 ]}
                 resizeMode="contain"
@@ -332,9 +336,9 @@ useEffect(() => {
                   style={[styles.splashButton, { backgroundColor: '#D2C0EA', paddingVertical: 8 }]} // Reduced padding to make the button thinner
                   onPress={() => setShowRegistration(true)}
                 >
-                  <Text style={{ 
-                    color: 'black', 
-                    fontSize: 18, 
+                  <Text style={{
+                    color: 'black',
+                    fontSize: 18,
                     fontWeight: 'bold',
                     fontFamily: 'KingthingsOrganica'
                   }}>
@@ -358,9 +362,9 @@ useEffect(() => {
                   style={[styles.splashButton, { backgroundColor: '#D2C0EA' }]}
                   onPress={() => setShowPolicy(true)}
                 >
-                  <Text style={{ 
-                    color: 'black', 
-                    fontSize: 18, 
+                  <Text style={{
+                    color: 'black',
+                    fontSize: 18,
                     fontWeight: 'bold',
                     fontFamily: 'KingthingsOrganica'
                   }}>
@@ -378,7 +382,7 @@ useEffect(() => {
   return (
     <Tabs screenOptions={{
       tabBarActiveTintColor: '#1d4ed8',
-      tabBarStyle: { 
+      tabBarStyle: {
         backgroundColor: '#E6FF99',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
@@ -391,40 +395,40 @@ useEffect(() => {
       tabBarShowLabel: false, // Désactiver l'affichage des labels
     }}>
       <Tabs.Screen
-      name="index"
-      options={{
-        title: 'Accueil',
-        tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon Icon="Feather" name="home" color={color} focused={focused} />
-        ),
-      }}
+        name="index"
+        options={{
+          title: 'Accueil',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon Icon="Feather" name="home" color={color} focused={focused} />
+          ),
+        }}
       />
       <Tabs.Screen
-      name="page1"
-      options={{
-        title: 'Page 1',
-        tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon Icon="FontAwesome5" name="calendar-alt" color={color} focused={focused} />
-        ),
-      }}
+        name="page1"
+        options={{
+          title: 'Page 1',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon Icon="FontAwesome5" name="calendar-alt" color={color} focused={focused} />
+          ),
+        }}
       />
       <Tabs.Screen
-      name="page2"
-      options={{
-        title: 'Page 2',
-        tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon Icon="FontAwesome5" name="chart-bar" color={color} focused={focused} />
-        ),
-      }}
+        name="page2"
+        options={{
+          title: 'Page 2',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon Icon="FontAwesome5" name="chart-bar" color={color} focused={focused} />
+          ),
+        }}
       />
       <Tabs.Screen
-      name="page3"
-      options={{
-        title: 'Settings',
-        tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon Icon="Feather" name="settings" color={color} focused={focused} />
-        ),
-      }}
+        name="page3"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon Icon="Feather" name="settings" color={color} focused={focused} />
+          ),
+        }}
       />
     </Tabs>
   );

@@ -23,14 +23,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function Index() {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+export default function Index() {  const [fontsLoaded, setFontsLoaded] = useState(false);
   const [showMoneyPopup, setShowMoneyPopup] = useState(false);
   const [showCigarettePopup, setShowCigarettePopup] = useState(false);
   const [showLifeDaysPopup, setShowLifeDaysPopup] = useState(false);
   const [showTimeSavedPopup, setShowTimeSavedPopup] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const router = useRouter();
-
   useEffect(() => {
     async function loadFonts() {
       await Font.loadAsync({
@@ -41,10 +40,25 @@ export default function Index() {
     }
     loadFonts();
   }, []);
-
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setElapsedSeconds(prev => prev + 1);
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
   }
+  
+  // Calculer les heures, minutes et secondes à partir du temps total écoulé
+  const hours = Math.floor(elapsedSeconds / 3600);
+  const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+  const seconds = elapsedSeconds % 60;
+  
+  // Formater les nombres avec un zéro devant si nécessaire
+  const formatNumber = (num: number) => num < 10 ? `0${num}` : `${num}`;
 
   return (
     <>
@@ -66,24 +80,23 @@ export default function Index() {
         <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700 ">My Progress</Text>
         <Entypo name="share-alternative" size={24} color="blue" className="mr-2" />
       </View>
-      
-      <View className="bg-limeGreen mt-2 pb-6 rounded-xl">
+        <View className="bg-limeGreen mt-2 pb-6 rounded-xl">
         <View className="flex-row ml-2 mt-3 ">
           <MaterialCommunityIcons name="clock-check-outline" size={24} color="black" />
           <Text style={styles.insideText} className="mt-1 ml-1"> Stay clean for</Text>
         </View>
         <View className="flex-row justify-between px-20">
           <View>
-              <Text style={styles.insideText} className="text-4xl">03</Text>
-              <Text style={styles.insideText} >months</Text>
+              <Text style={styles.insideText} className="text-4xl">{formatNumber(hours)}</Text>
+              <Text style={styles.insideText} >hours</Text>
           </View>
           <View>
-              <Text style={styles.insideText}className="text-4xl">03</Text>
-              <Text style={styles.insideText}>days</Text>
+              <Text style={styles.insideText} className="text-4xl">{formatNumber(minutes)}</Text>
+              <Text style={styles.insideText}>minutes</Text>
           </View>
           <View>
-              <Text style={styles.insideText} className="text-4xl">03</Text>
-              <Text style={styles.insideText}>hours</Text>
+              <Text style={styles.insideText} className="text-4xl">{formatNumber(seconds)}</Text>
+              <Text style={styles.insideText}>seconds</Text>
           </View>
         </View>
       </View>
