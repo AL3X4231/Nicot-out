@@ -81,7 +81,8 @@ export default function Index() {
       const response = await axios.post('http://localhost:3000/daily', {
         cigarettesCount:cigarettesCount,
         confidence:confidence,
-        craving:craving
+        craving:craving,
+        user_id:'test-user-1'
       });
       console.log('Axios POST response:', response.data);
     } catch (error) {
