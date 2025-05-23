@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+import axios from 'axios';
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -71,6 +72,23 @@ export default function Index() {
     loadFonts();
   }, []);
 
+  // Function to log the current values of craving, smoking (cigarettesCount), and confidence
+  const logCheckinLevels = async () => {
+    console.log('Cigarettes smoked:', cigarettesCount);
+    console.log('Confidence level:', confidence);
+    console.log('Craving level:', craving);
+    try {
+      const response = await axios.post('http://localhost:3000/daily', {
+        cigarettesCount:cigarettesCount,
+        confidence:confidence,
+        craving:craving
+      });
+      console.log('Axios POST response:', response.data);
+    } catch (error) {
+      console.error('Axios POST error:', error);
+    }
+  };
+
   const handleNextStep = () => {
     switch(step) {
       case 0:
@@ -101,6 +119,7 @@ export default function Index() {
           { text: "Thank you for sharing! Keep going, you're doing great!", isBot: true }
         ]);
         setStep(4);
+        logCheckinLevels(); // Log values after the third question is answered
         break;
     }
   };
