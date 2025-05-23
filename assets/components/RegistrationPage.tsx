@@ -8,6 +8,9 @@ const screenWidth = Dimensions.get('window').width;
 
 const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [birthDay, setBirthDay] = useState(1);
   const [birthMonth, setBirthMonth] = useState(1);
   const [birthYear, setBirthYear] = useState(2025);
@@ -20,6 +23,8 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   const [birthDate, setBirthDate] = useState(new Date());
   const [showAnimation, setShowAnimation] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const [weight, setWeight] = useState('');
+  const [smokingYears, setSmokingYears] = useState('');
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month, 0).getDate();
@@ -241,9 +246,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} bounces={false}>
       <Text style={styles.header}>Welcome!</Text>
-      <Text style={styles.subHeader}>Let's get to know you</Text>
-
-      <View style={styles.card}>
+      <Text style={styles.subHeader}>Let's get to know you</Text>      <View style={styles.card}>
         <Text style={styles.label}>Your name</Text>
         <TextInput
           style={styles.input}
@@ -252,6 +255,35 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           value={name}
           onChangeText={setName}
         />
+
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="your.email@example.com"
+          placeholderTextColor="#18122B33"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+        <Text style={styles.label}>Password</Text>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={[styles.input, { flex: 1, marginBottom: 0 }]}
+            placeholder="Create a password"
+            placeholderTextColor="#18122B33"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity 
+            style={styles.eyeButton}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Text style={styles.eyeIcon}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+          </TouchableOpacity>
+        </View>
 
         {renderDatePicker()}
 
@@ -263,9 +295,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           value={packetPrice}
           onChangeText={setPacketPrice}
           keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>How many per day?</Text>
+        />        <Text style={styles.label}>How many per day?</Text>
         <TextInput
           style={styles.input}
           placeholder="5 cigarettes"
@@ -273,9 +303,27 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           value={perDay}
           onChangeText={setPerDay}
           keyboardType="numeric"
+        />        <Text style={styles.label}>Years of smoking</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="5 years"
+          placeholderTextColor="#18122B33"
+          value={smokingYears}
+          onChangeText={setSmokingYears}
+          keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Your motivation</Text>
+        <Text style={styles.label}>Your weight</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="75 kg"
+          placeholderTextColor="#18122B33"
+          value={weight}
+          onChangeText={setWeight}
+          keyboardType="numeric"
+        />
+        <Text style={styles.label}>Your motivation (optional)</Text>
+
         <TextInput
           style={[styles.input, styles.textArea]}
           placeholder="I want to quit for my health, family, etc."
@@ -284,10 +332,11 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           onChangeText={setMotivation}
           multiline
         />
+
         <TouchableOpacity onPress={handleLoginPress} style={styles.loginLink}>
           <Text style={styles.loginLinkText}>I already have an account - Login</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.finishButton} onPress={handleFinish} activeOpacity={0.85}>
           <Text style={styles.finishButtonText}>Finish</Text>
         </TouchableOpacity>
@@ -319,6 +368,27 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginTop: 16,
     marginBottom: 32,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  eyeButton: {
+    padding: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  eyeIcon: {
+    fontSize: 20,
+    color: '#18122B',
   },
   header: {
     color: '#D2C0EA',
