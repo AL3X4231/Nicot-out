@@ -19,6 +19,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   const [showQuitDatePicker, setShowQuitDatePicker] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
   const [showAnimation, setShowAnimation] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month, 0).getDate();
@@ -56,6 +57,10 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
     if (onFinish) onFinish();
   };
 
+  const handleLoginPress = () => {
+    setShowLoginForm(true);
+  };
+
   if (showAnimation) {
     return (
       <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center' }}>
@@ -67,6 +72,42 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           style={{ width: 320, height: 320 }}
         />
       </View>
+    );
+  }
+
+  if (showLoginForm) {
+    return (
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} bounces={false}>
+        <Text style={styles.header}>Welcome Back!</Text>
+        <Text style={styles.subHeader}>Sign in to continue</Text>
+
+        <View style={styles.card}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="your.email@example.com"
+            placeholderTextColor="#18122B33"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Your password"
+            placeholderTextColor="#18122B33"
+            secureTextEntry
+          />
+
+          <TouchableOpacity style={styles.finishButton} activeOpacity={0.85}>
+            <Text style={styles.finishButtonText}>Login</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity onPress={() => setShowLoginForm(false)} style={styles.loginLink}>
+            <Text style={styles.loginLinkText}>I don't have an account - Register</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 
@@ -243,10 +284,15 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           onChangeText={setMotivation}
           multiline
         />
-
+        <TouchableOpacity onPress={handleLoginPress} style={styles.loginLink}>
+          <Text style={styles.loginLinkText}>I already have an account - Login</Text>
+        </TouchableOpacity>
+        
         <TouchableOpacity style={styles.finishButton} onPress={handleFinish} activeOpacity={0.85}>
           <Text style={styles.finishButtonText}>Finish</Text>
         </TouchableOpacity>
+        
+
       </View>
     </ScrollView>
   );
@@ -393,6 +439,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  loginLink: {
+    alignSelf: 'center',
+    marginTop: 20,
+    paddingVertical: 8,
+  },
+  loginLinkText: {
+    color: '#D2C0EA',
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+    textDecorationLine: 'underline',
   },
 });
 
