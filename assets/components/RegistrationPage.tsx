@@ -1,5 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import React, { useState } from 'react';
 import { Dimensions, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -53,7 +54,27 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
+    const userData = {
+      name,
+      email,
+      password,
+      birthDay,
+      birthMonth,
+      birthYear,
+      packetPrice,
+      perDay,
+      quitDate: quitDate.toISOString(),
+      motivation,
+      weight,
+      smokingYears,
+    };
+    try {
+      const response = await axios.post('http://localhost:3000/register', userData);
+      console.log('Registration POST response:', response.data);
+    } catch (error) {
+      console.error('Registration POST error:', error);
+    }
     setShowAnimation(true);
   };
 
