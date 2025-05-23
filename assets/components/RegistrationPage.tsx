@@ -25,7 +25,81 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   const [showAnimation, setShowAnimation] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [weight, setWeight] = useState('');
-  const [smokingYears, setSmokingYears] = useState('');
+  const [smokingYears, setSmokingYears] = useState('1');
+  
+  // Smoking years array
+  const smokingYearsOptions = Array.from({ length: 70 }, (_, i) => (i + 1).toString());
+  
+  // Validation states
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    packetPrice: '',
+    perDay: '',
+    weight: '',
+    smokingYears: ''
+  });
+
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  // Simple validation function
+  const validateFields = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+    
+    if (!name.trim()) {
+      newErrors.name = 'Name is required';
+      isValid = false;
+    } else {
+      newErrors.name = '';
+    }
+    
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = 'Please enter a valid email';
+      isValid = false;
+    } else {
+      newErrors.email = '';
+    }
+    
+    if (!password.trim()) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+      isValid = false;
+    } else {
+      newErrors.password = '';
+    }
+    
+    if (!packetPrice.trim()) {
+      newErrors.packetPrice = 'Packet price is required';
+      isValid = false;
+    } else {
+      newErrors.packetPrice = '';
+    }
+    
+    if (!perDay.trim()) {
+      newErrors.perDay = 'Cigarettes per day is required';
+      isValid = false;
+    } else {
+      newErrors.perDay = '';
+    }
+    
+    if (!weight.trim()) {
+      newErrors.weight = 'Weight is required';
+      isValid = false;
+    } else {
+      newErrors.weight = '';
+    }
+    
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month, 0).getDate();
@@ -55,6 +129,11 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   };
 
   const handleFinish = async () => {
+    if (!validateFields()) {
+      // If validation fails, return without submitting
+      return;
+    }
+    
     const userData = {
       name,
       email,
@@ -108,7 +187,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
         <Text style={styles.subHeader}>Sign in to continue</Text>
 
         <View style={styles.card}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>Email <Text style={styles.required}>*</Text></Text>
           <TextInput
             style={styles.input}
             placeholder="your.email@example.com"
@@ -117,7 +196,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Password</Text>
+          <Text style={styles.label}>Password <Text style={styles.required}>*</Text></Text>
           <TextInput
             style={styles.input}
             placeholder="Your password"
@@ -267,35 +346,54 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} bounces={false}>
       <Text style={styles.header}>Welcome!</Text>
-      <Text style={styles.subHeader}>Let's get to know you</Text>      <View style={styles.card}>
-        <Text style={styles.label}>Your name</Text>
+      <Text style={styles.subHeader}>Let's get to know you</Text>
+      
+      <View style={styles.card}>
+        <Text style={styles.label}>Your name <Text style={styles.required}>*</Text></Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.name ? styles.inputError : null]}
           placeholder="Name"
           placeholderTextColor="#18122B33"
           value={name}
-          onChangeText={setName}
+          onChangeText={(text) => {
+            setName(text);
+            if (text.trim()) {
+              setErrors({...errors, name: ''});
+            }
+          }}
         />
+        {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
 
-        <Text style={styles.label}>Email</Text>
+        <Text style={styles.label}>Email <Text style={styles.required}>*</Text></Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.email ? styles.inputError : null]}
           placeholder="your.email@example.com"
           placeholderTextColor="#18122B33"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            if (emailRegex.test(text)) {
+              setErrors({...errors, email: ''});
+            }
+          }}
           keyboardType="email-address"
           autoCapitalize="none"
         />
+        {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
-        <Text style={styles.label}>Password</Text>
-        <View style={styles.passwordContainer}>
+        <Text style={styles.label}>Password <Text style={styles.required}>*</Text></Text>
+        <View style={[styles.passwordContainer, errors.password ? styles.inputError : null]}>
           <TextInput
             style={[styles.input, { flex: 1, marginBottom: 0 }]}
             placeholder="Create a password"
             placeholderTextColor="#18122B33"
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(text) => {
+              setPassword(text);
+              if (text.length >= 6) {
+                setErrors({...errors, password: ''});
+              }
+            }}
             secureTextEntry={!showPassword}
           />
           <TouchableOpacity 
@@ -305,46 +403,74 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
             <Text style={styles.eyeIcon}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
           </TouchableOpacity>
         </View>
+        {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 
         {renderDatePicker()}
 
-        <Text style={styles.label}>Packet price</Text>
+        <Text style={styles.label}>Packet price <Text style={styles.required}>*</Text></Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.packetPrice ? styles.inputError : null]}
           placeholder="14 €"
           placeholderTextColor="#18122B33"
           value={packetPrice}
-          onChangeText={setPacketPrice}
+          onChangeText={(text) => {
+            setPacketPrice(text);
+            if (text.trim()) {
+              setErrors({...errors, packetPrice: ''});
+            }
+          }}
           keyboardType="numeric"
-        />        <Text style={styles.label}>How many per day?</Text>
+        />
+        {errors.packetPrice ? <Text style={styles.errorText}>{errors.packetPrice}</Text> : null}
+        
+        <Text style={styles.label}>How many per day? <Text style={styles.required}>*</Text></Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.perDay ? styles.inputError : null]}
           placeholder="5 cigarettes"
           placeholderTextColor="#18122B33"
           value={perDay}
-          onChangeText={setPerDay}
-          keyboardType="numeric"
-        />        <Text style={styles.label}>Years of smoking</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="5 years"
-          placeholderTextColor="#18122B33"
-          value={smokingYears}
-          onChangeText={setSmokingYears}
+          onChangeText={(text) => {
+            setPerDay(text);
+            if (text.trim()) {
+              setErrors({...errors, perDay: ''});
+            }
+          }}
           keyboardType="numeric"
         />
+        {errors.perDay ? <Text style={styles.errorText}>{errors.perDay}</Text> : null}        <Text style={styles.label}>Years of smoking <Text style={styles.required}>*</Text></Text>
+        <View style={styles.rowPickerGroup}>
+          <View style={[styles.pickerWrapper, styles.roundPicker, { flex: 1 }]}>
+            <Picker
+              selectedValue={smokingYears}
+              onValueChange={(value) => setSmokingYears(value)}
+              style={[styles.picker, styles.roundPickerInner]}
+            >
+              {smokingYearsOptions.map(year => (
+                <Picker.Item key={year} label={year} value={year} />
+              ))}
+            </Picker>
+          </View>
+          <View style={{ flex: 2 }}></View>
+        </View>
+        {errors.smokingYears ? <Text style={styles.errorText}>{errors.smokingYears}</Text> : null}
 
-        <Text style={styles.label}>Your weight</Text>
+        <Text style={styles.label}>Your weight <Text style={styles.required}>*</Text></Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, errors.weight ? styles.inputError : null]}
           placeholder="75 kg"
           placeholderTextColor="#18122B33"
           value={weight}
-          onChangeText={setWeight}
+          onChangeText={(text) => {
+            setWeight(text);
+            if (text.trim()) {
+              setErrors({...errors, weight: ''});
+            }
+          }}
           keyboardType="numeric"
         />
+        {errors.weight ? <Text style={styles.errorText}>{errors.weight}</Text> : null}
+        
         <Text style={styles.label}>Your motivation (optional)</Text>
-
         <TextInput
           style={[styles.input, styles.textArea]}
           placeholder="I want to quit for my health, family, etc."
@@ -353,7 +479,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
           onChangeText={setMotivation}
           multiline
         />
-
+        
         <TouchableOpacity onPress={handleLoginPress} style={styles.loginLink}>
           <Text style={styles.loginLinkText}>I already have an account - Login</Text>
         </TouchableOpacity>
@@ -361,8 +487,6 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
         <TouchableOpacity style={styles.finishButton} onPress={handleFinish} activeOpacity={0.85}>
           <Text style={styles.finishButtonText}>Finish</Text>
         </TouchableOpacity>
-        
-
       </View>
     </ScrollView>
   );
@@ -389,6 +513,21 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginTop: 16,
     marginBottom: 32,
+  },
+  inputError: {
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+  },
+  errorText: {
+    color: '#FF6B6B',
+    fontSize: 12,
+    marginTop: -8,
+    marginBottom: 6,
+    fontWeight: '500',
+  },
+  required: {
+    color: '#FF6B6B',
+    fontWeight: 'bold',
   },
   passwordContainer: {
     flexDirection: 'row',
