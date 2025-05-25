@@ -1,5 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import React, { useState } from 'react';
@@ -180,6 +182,36 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
     );
   }
 
+  // Login form states
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const navigation = useNavigation();
+  const handleLogin = async () => {
+    setLoginError('');
+    setLoginLoading(true);
+    try {
+      const response = await axios.post('http://localhost:3000/login', {
+        email: loginEmail,
+        password: loginPassword,
+      });
+      console.log('Login POST response:', response.data);
+      // Save user_id in AsyncStorage
+      if (response.data && response.data.user && response.data.user.user_id) {
+        await AsyncStorage.setItem('user_id', response.data.user.user_id);
+      }
+      // Redirect to home screen
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    } catch (error) {
+      setLoginError('Invalid email or password');
+      console.error('Login POST error:', error);
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
   if (showLoginForm) {
     return (
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} bounces={false}>
@@ -194,6 +226,8 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
             placeholderTextColor="#18122B33"
             keyboardType="email-address"
             autoCapitalize="none"
+            value={loginEmail}
+            onChangeText={setLoginEmail}
           />
 
           <Text style={styles.label}>Password <Text style={styles.required}>*</Text></Text>
@@ -202,10 +236,14 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
             placeholder="Your password"
             placeholderTextColor="#18122B33"
             secureTextEntry
+            value={loginPassword}
+            onChangeText={setLoginPassword}
           />
 
-          <TouchableOpacity style={styles.finishButton} activeOpacity={0.85}>
-            <Text style={styles.finishButtonText}>Login</Text>
+          {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
+
+          <TouchableOpacity style={styles.finishButton} activeOpacity={0.85} onPress={handleLogin} disabled={loginLoading}>
+            <Text style={styles.finishButtonText}>{loginLoading ? 'Logging in...' : 'Login'}</Text>
           </TouchableOpacity>
           
           <TouchableOpacity onPress={() => setShowLoginForm(false)} style={styles.loginLink}>
