@@ -203,7 +203,7 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
         await AsyncStorage.setItem('user_id', response.data.user.user_id);
       }
       // Redirect to home screen
-      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      navigation.reset({ index: 0, routes: [{ name: 'Home' as never }] });
     } catch (error) {
       setLoginError('Invalid email or password');
       console.error('Login POST error:', error);

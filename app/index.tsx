@@ -1,4 +1,3 @@
-import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -78,7 +77,6 @@ export default function Index() {  const [fontsLoaded, setFontsLoaded] = useStat
       </TouchableOpacity>
       <View className="flex-row justify-between mt-10">
         <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700 ">My Progress</Text>
-        <Entypo name="share-alternative" size={24} color="blue" className="mr-2" />
       </View>
         <View className="bg-limeGreen mt-2 pb-6 rounded-xl">
         <View className="flex-row ml-2 mt-3 ">
@@ -171,98 +169,6 @@ export default function Index() {  const [fontsLoaded, setFontsLoaded] = useStat
           <View className="items-center flex-1">
             <CircularProgress percentage={29} />
             <Text style={styles.insideText} className="mt-2 text-center">reduced risk{'\n'}of heart</Text>
-          </View>
-        </View>
-      </View>
-      <View className="mt-6">
-        <Text style={styles.TitleText} className="ml-2 text-3xl text-blue-700">My Goal</Text>
-        <View className="flex-row flex-wrap justify-between mt-4">
-          {/* Health Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <MaterialCommunityIcons name="heart-pulse" size={24} color="#EC4899" />
-              <Text style={styles.insideText} className="text-center mt-2">Health</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[75%] h-1 bg-pink-500 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          {/* Wellbeing Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <MaterialCommunityIcons name="food-apple" size={24} color="#EF4444" />
-              <Text style={styles.insideText} className="text-center mt-2">Wellbeing</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[60%] h-1 bg-red-500 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          {/* Ecology Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <FontAwesome5 name="globe-americas" size={24} color="#10B981" />
-              <Text style={styles.insideText} className="text-center mt-2">Ecology</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[45%] h-1 bg-emerald-500 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          {/* Body Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <FontAwesome5 name="user" size={24} color="#6366F1" />
-              <Text style={styles.insideText} className="text-center mt-2">Body</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[85%] h-1 bg-indigo-500 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          {/* Progress Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <MaterialCommunityIcons name="chart-line" size={24} color="#F59E0B" />
-              <Text style={styles.insideText} className="text-center mt-2">Progress</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[55%] h-1 bg-amber-500 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          {/* Lungs Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <MaterialCommunityIcons name="lungs" size={24} color="#8B5CF6" />
-              <Text style={styles.insideText} className="text-center mt-2">Lungs</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[65%] h-1 bg-violet-500 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          {/* Time Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <MaterialCommunityIcons name="clock-outline" size={24} color="#3B82F6" />
-              <Text style={styles.insideText} className="text-center mt-2">Time</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[70%] h-1 bg-blue-500 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          {/* Substances Card */}
-          <View className="w-[30%] bg-limeGreen rounded-xl p-4 mb-4">
-            <View className="items-center">
-              <MaterialCommunityIcons name="virus" size={24} color="#DC2626" />
-              <Text style={styles.insideText} className="text-center mt-2">Substances</Text>
-              <View className="w-full h-1 bg-gray-200 rounded-full mt-2">
-                <View className="w-[40%] h-1 bg-red-600 rounded-full" />
-              </View>
-            </View>
           </View>
         </View>
       </View>
