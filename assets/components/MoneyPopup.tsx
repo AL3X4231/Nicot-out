@@ -1,14 +1,12 @@
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { BlurView } from 'expo-blur';
-import * as Haptics from 'expo-haptics';
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface MoneyPopupProps {
   isVisible: boolean;
   onClose: () => void;
   amount: string;
-  details?: {
+  details: {
     daily: string;
     weekly: string;
     monthly: string;
@@ -16,199 +14,123 @@ interface MoneyPopupProps {
   };
 }
 
-const { width, height } = Dimensions.get('window');
-
-const MoneyPopup = ({ isVisible, onClose, amount, details = { 
-  daily: '3.33$', 
-  weekly: '23.31$', 
-  monthly: '100$', 
-  yearly: '1200$' 
-} }: MoneyPopupProps) => {
-  const animatedValue = React.useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    if (isVisible) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      Animated.spring(animatedValue, {
-        toValue: 1,
-        damping: 15,
-        mass: 1,
-        stiffness: 120,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [isVisible]);
-
-  if (!isVisible) return null;
-
-  const translateY = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [height, 0],
-  });
-
+const MoneyPopup = ({ isVisible, onClose, amount, details }: MoneyPopupProps) => {
   return (
-    <View style={styles.container}>
-      <BlurView intensity={90} style={StyleSheet.absoluteFill} tint="dark" />
-      
-      <Animated.View 
-        style={[
-          styles.popup, 
-          { transform: [{ translateY }] }
-        ]}
-      >
-        <View style={styles.header}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={isVisible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <FontAwesome5 name="times" size={20} color="#1D4ED8" />
+            <MaterialIcons name="close" size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles.title}>Money Saved</Text>
-        </View>
 
-        <View style={styles.amountContainer}>
-          <FontAwesome5 name="money-bill-wave" size={36} color="#16A34A" />
+          <Text style={styles.modalTitle}>Money Saved</Text>
           <Text style={styles.amountText}>{amount}</Text>
+
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Daily Average:</Text>
+              <Text style={styles.detailValue}>{details.daily}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Weekly Average:</Text>
+              <Text style={styles.detailValue}>{details.weekly}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Monthly Average:</Text>
+              <Text style={styles.detailValue}>{details.monthly}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Yearly Projection:</Text>
+              <Text style={styles.detailValue}>{details.yearly}</Text>
+            </View>
+          </View>
+
+          <Text style={styles.motivationalText}>
+            Keep going! You could save {details.yearly} in a year!
+          </Text>
         </View>
-
-        <View style={styles.separator} />
-
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Daily savings:</Text>
-            <Text style={styles.detailValue}>{details.daily}</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Weekly savings:</Text>
-            <Text style={styles.detailValue}>{details.weekly}</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Monthly savings:</Text>
-            <Text style={styles.detailValue}>{details.monthly}</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Yearly savings:</Text>
-            <Text style={styles.detailValue}>{details.yearly}</Text>
-          </View>
-        </View>
-
-        <View style={styles.separator} />
-
-        <Text style={styles.message}>
-          You've saved enough to buy yourself a nice reward! Keep going!
-        </Text>
-
-        <TouchableOpacity style={styles.button} onPress={onClose}>
-          <Text style={styles.buttonText}>Keep Saving</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  centeredView: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  popup: {
-    backgroundColor: 'white',
+  modalView: {
+    width: '90%',
+    backgroundColor: '#E6FF99',
     borderRadius: 20,
-    width: width * 0.9,
-    maxHeight: height * 0.8,
     padding: 20,
-    elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    position: 'relative',
+    shadowRadius: 4,
+    elevation: 5,
   },
   closeButton: {
     position: 'absolute',
-    right: 0,
-    top: 0,
-    padding: 5,
+    right: 15,
+    top: 15,
+    zIndex: 1,
   },
-  title: {
+  modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1D4ED8',
     textAlign: 'center',
+    marginBottom: 15,
     fontFamily: 'Gallant',
-  },
-  amountContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
-    flexDirection: 'row',
+    color: '#1d4ed8',
   },
   amountText: {
-    fontSize: 48,
+    fontSize: 36,
     fontWeight: 'bold',
-    color: '#16A34A',
-    marginLeft: 15,
-    fontFamily: 'Gallant',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#E5E7EB',
-    marginVertical: 20,
+    textAlign: 'center',
+    color: 'green',
+    marginBottom: 20,
+    fontFamily: 'BrugtyDemoRegular',
   },
   detailsContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 15,
     marginBottom: 20,
   },
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginVertical: 5,
   },
   detailLabel: {
     fontSize: 16,
-    color: '#4B5563',
     fontFamily: 'Gallant',
+    color: '#4a5568',
   },
   detailValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#047857',
     fontFamily: 'Gallant',
+    color: 'green',
   },
-  message: {
-    fontSize: 18,
+  motivationalText: {
     textAlign: 'center',
-    color: '#4B5563',
-    marginBottom: 20,
+    fontSize: 16,
+    color: '#2d3748',
     fontFamily: 'Gallant',
+    fontStyle: 'italic',
   },
-  button: {
-    backgroundColor: '#D3FD51',
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    fontFamily: 'Gallant',
-  }
 });
 
 export default MoneyPopup;

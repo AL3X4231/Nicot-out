@@ -1,5 +1,7 @@
 import Entypo from '@expo/vector-icons/Entypo';
-import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import AccountDetailsPopup from '../assets/components/AccountDetailsPopup';
 import AddictionsPopup from '../assets/components/AddictionsPopup';
@@ -20,6 +22,26 @@ export default function Page3() {
   const [showSuggestFeaturePopup, setShowSuggestFeaturePopup] = useState(false);
   const [showReportBugPopup, setShowReportBugPopup] = useState(false);
   const [showShareAppPopup, setShowShareAppPopup] = useState(false);
+
+  // Add user data state
+  const [userData, setUserData] = useState<any>(null);
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const userId = await AsyncStorage.getItem('user_id');
+        if (userId) {
+          const response = await axios.get(`http://localhost:3000/users/${userId}`);
+          console.log('User settings data:', response.data);
+          setUserData(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    }
+    fetchUserData();
+  }, []);
 
   return (
     <>
@@ -107,15 +129,16 @@ export default function Page3() {
         </View>
       </View>
       </ScrollView>
+
       {/* My Account Popups */}
       <AccountDetailsPopup 
         isVisible={showAccountDetailsPopup}
         onClose={() => setShowAccountDetailsPopup(false)}
         userDetails={{
-          username: 'user4278',
-          email: 'user@example.com',
-          joinDate: 'May 1, 2025',
-          phoneNumber: '',
+          username: userData?.username || '',
+          email: userData?.email || '',
+          joinDate: userData?.created_at ? new Date(userData.created_at).toLocaleDateString() : '',
+          phoneNumber: '', // This field isn't in the API yet
         }}
       />
 
@@ -123,10 +146,10 @@ export default function Page3() {
         isVisible={showAddictionsPopup}
         onClose={() => setShowAddictionsPopup(false)}
         addictionDetails={{
-          cigarettesPerDay: 15,
-          cigaretteCost: 0.5,
-          startDate: 'January 10, 2020',
-          quitDate: 'February 1, 2025',
+          cigarettesPerDay: userData?.starting_cigarettes_per_day || 0,
+          cigaretteCost: 0.5, // Cost per cigarette (assuming $10 per pack of 20)
+          startDate: userData?.birth ? new Date(userData.birth).toLocaleDateString() : '',
+          quitDate: userData?.quit_date ? new Date(userData.quit_date).toLocaleDateString() : '',
         }}
       />
 
@@ -137,9 +160,9 @@ export default function Page3() {
           dailyReminders: true,
           achievementAlerts: true,
           milestoneReminders: true,
-          motivationalMessages: false,
+          motivationalMessages: true,
           healthUpdates: true,
-          savingsAlerts: false,
+          savingsAlerts: true,
         }}
       />
 

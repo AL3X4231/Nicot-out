@@ -1,281 +1,140 @@
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { BlurView } from 'expo-blur';
-import * as Haptics from 'expo-haptics';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface LifeDaysPopupProps {
   isVisible: boolean;
   onClose: () => void;
   days: string;
-  details?: {
+  details: {
     hoursPerDay: string;
     expectedLifespan: string;
     qualityImprovement: string;
   };
 }
 
-const { width, height } = Dimensions.get('window');
-
-const LifeDaysPopup = ({ 
-  isVisible, 
-  onClose, 
-  days, 
-  details = {
-    hoursPerDay: '4',
-    expectedLifespan: '5+ years',
-    qualityImprovement: '35%'
-  }
-}: LifeDaysPopupProps) => {
-  const animatedValue = React.useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    if (isVisible) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      Animated.spring(animatedValue, {
-        toValue: 1,
-        damping: 15,
-        mass: 1,
-        stiffness: 120,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [isVisible]);
-
-  if (!isVisible) return null;
-
-  const translateY = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [height, 0],
-  });
-
+const LifeDaysPopup = ({ isVisible, onClose, days, details }: LifeDaysPopupProps) => {
   return (
-    <View style={styles.container}>
-      <BlurView intensity={90} style={StyleSheet.absoluteFill} tint="dark" />
-      
-      <Animated.View 
-        style={[
-          styles.popup, 
-          { transform: [{ translateY }] }
-        ]}
-      >
-        <View style={styles.header}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={isVisible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <FontAwesome5 name="times" size={20} color="#1D4ED8" />
+            <MaterialIcons name="close" size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles.title}>Life Gained</Text>
-        </View>
 
-        <View style={styles.amountContainer}>
-          <MaterialCommunityIcons name="timer-sand" size={36} color="#FB923C" />
-          <Text style={styles.amountText}>{days} days</Text>
-        </View>
-
-        <View style={styles.separator} />
-
-        <View style={styles.infoSection}>
-          <View style={styles.infoRow}>
-            <FontAwesome5 name="calendar-plus" size={20} color="#FB923C" style={styles.infoIcon} />
-            <Text style={styles.infoText}>
-              Every cigarette you don't smoke adds approximately 11 minutes to your life.
-              In 30 days, that's a whole day of life gained!
-            </Text>
-          </View>
+          <Text style={styles.modalTitle}>Life Extended</Text>
           
-          <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="human-handsup" size={20} color="#FB923C" style={styles.infoIcon} />
-            <Text style={styles.infoText}>
-              You're gaining {details.hoursPerDay} hours of quality life every day by not smoking.
-            </Text>
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="heart-plus" size={40} color="red" />
+            <Text style={styles.amountText}>{days} days</Text>
           </View>
-          
-          <View style={styles.infoRow}>
-            <FontAwesome5 name="heartbeat" size={20} color="#FB923C" style={styles.infoIcon} />
-            <Text style={styles.infoText}>
-              Your overall life expectancy has increased by approximately {details.expectedLifespan} since quitting.
-            </Text>
-          </View>
-        </View>
 
-        <View style={styles.separator} />
-
-        <View style={styles.progressSection}>
-          <Text style={styles.progressTitle}>Life Quality Improvement</Text>
-          
-          <View style={styles.progressBarContainer}>
-            <View style={styles.progressBar}>
-              <View
-                style={[
-                  styles.progressFill,
-                  {
-                    width: `${
-                      Math.max(
-                        0,
-                        Math.min(
-                          100,
-                          parseFloat(details.qualityImprovement.replace('%', ''))
-                        )
-                      )
-                    }%`
-                  }
-                ]}
-              />
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Hours Gained Per Day:</Text>
+              <Text style={styles.detailValue}>{details.hoursPerDay}h</Text>
             </View>
-            <Text style={styles.progressText}>{details.qualityImprovement}</Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Expected Life Extension:</Text>
+              <Text style={styles.detailValue}>{details.expectedLifespan}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Health Improvement:</Text>
+              <Text style={styles.detailValue}>{details.qualityImprovement}</Text>
+            </View>
           </View>
-          
-          <Text style={styles.progressDescription}>
-            Not only are you living longer, but the quality of those years will be significantly better.
-            Breathing is easier, physical activity is more enjoyable, and your risk of serious illnesses decreases with each day.
+
+          <Text style={styles.motivationalText}>
+            Every cigarette not smoked adds precious moments to your life!
           </Text>
         </View>
-
-        <TouchableOpacity style={styles.button} onPress={onClose}>
-          <Text style={styles.buttonText}>Keep Living Longer!</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  centeredView: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  popup: {
-    backgroundColor: 'white',
+  modalView: {
+    width: '90%',
+    backgroundColor: '#E6FF99',
     borderRadius: 20,
-    width: width * 0.9,
-    maxHeight: height * 0.8,
     padding: 20,
-    elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    position: 'relative',
+    shadowRadius: 4,
+    elevation: 5,
   },
   closeButton: {
     position: 'absolute',
-    right: 0,
-    top: 0,
-    padding: 5,
+    right: 15,
+    top: 15,
+    zIndex: 1,
   },
-  title: {
+  modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1D4ED8',
     textAlign: 'center',
-    fontFamily: 'Gallant',
-  },
-  amountContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
-    flexDirection: 'row',
-  },
-  amountText: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: '#FB923C',
-    marginLeft: 15,
-    fontFamily: 'Gallant',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#E5E7EB',
-    marginVertical: 20,
-  },
-  infoSection: {
-    marginBottom: 10,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
     marginBottom: 15,
-  },
-  infoIcon: {
-    marginRight: 12,
-    marginTop: 2,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: 15,
-    color: '#4B5563',
     fontFamily: 'Gallant',
+    color: '#1d4ed8',
   },
-  progressSection: {
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
   },
-  progressTitle: {
-    fontSize: 18,
+  amountText: {
+    fontSize: 36,
     fontWeight: 'bold',
-    color: '#FB923C',
-    marginBottom: 10,
-    fontFamily: 'Gallant',
+    marginLeft: 10,
+    color: 'black',
+    fontFamily: 'BrugtyDemoRegular',
   },
-  progressBarContainer: {
+  detailsContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+  },
+  detailRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
+    justifyContent: 'space-between',
+    marginVertical: 5,
   },
-  progressBar: {
-    flex: 1,
-    height: 8,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 4,
-    marginRight: 10,
+  detailLabel: {
+    fontSize: 16,
+    fontFamily: 'Gallant',
+    color: '#4a5568',
   },
-  progressFill: {
-    height: 8,
-    backgroundColor: '#FB923C',
-    borderRadius: 4,
-  },
-  progressText: {
-    fontSize: 14,
+  detailValue: {
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#FB923C',
     fontFamily: 'Gallant',
+    color: '#1d4ed8',
   },
-  progressDescription: {
-    fontSize: 14,
-    color: '#4B5563',
+  motivationalText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#2d3748',
     fontFamily: 'Gallant',
-    lineHeight: 20,
+    fontStyle: 'italic',
   },
-  button: {
-    backgroundColor: '#D3FD51',
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    fontFamily: 'Gallant',
-  }
 });
 
 export default LifeDaysPopup;
