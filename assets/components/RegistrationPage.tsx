@@ -153,15 +153,13 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
     try {
       const response = await axios.post('http://localhost:3000/register', userData);
       console.log('Registration POST response:', response.data);
-      // Show animation first
       setShowAnimation(true);
-      // After animation finishes, handleAnimationFinish will be called
     } catch (error) {
       console.error('Registration POST error:', error);
     }
+   
   };
 
-  // Update handleAnimationFinish to show login form
   const handleAnimationFinish = () => {
     setShowAnimation(false);
     setShowLoginForm(true); // Show login form after animation
@@ -194,10 +192,8 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
       if (response.data && response.data.user && response.data.user.user_id) {
         await AsyncStorage.setItem('user_id', response.data.user.user_id);
       }
-
       // Navigate to index page
     
-
     } catch (error) {
       setLoginError('Invalid email or password');
       console.error('Login POST error:', error);
