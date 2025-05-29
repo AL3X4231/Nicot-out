@@ -166,7 +166,10 @@ export default function RootLayout() {
     const RegistrationPage = require('../assets/components/RegistrationPage').default;
     return (
       <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center' }}>
-        <RegistrationPage onFinish={() => setShowRegistration(false)} />
+        <RegistrationPage onFinish={() => {
+          setShowRegistration(false);
+          setShowSplash(false); // Assurez-vous que l'écran de splash est également masqué
+        }} />
       </View>
     );
   }

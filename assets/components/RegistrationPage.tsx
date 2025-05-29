@@ -191,8 +191,11 @@ const RegistrationPage = ({ onFinish }: { onFinish?: () => void }) => {
       // Save user_id in AsyncStorage
       if (response.data && response.data.user && response.data.user.user_id) {
         await AsyncStorage.setItem('user_id', response.data.user.user_id);
+        
+        // Appel à onFinish() pour masquer l'écran de splash et afficher l'application
+        if (onFinish) onFinish();
       }
-      // Navigate to index page
+      
     
     } catch (error) {
       setLoginError('Invalid email or password');
